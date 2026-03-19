@@ -379,7 +379,6 @@ export class RiviumStorage {
           path,
           contentType: options.contentType,
           expiresIn: options.expiresIn || 300,
-          maxSize: options.maxSize,
         },
         requiresServerSecret: true,
       },

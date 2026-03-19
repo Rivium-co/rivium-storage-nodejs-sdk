@@ -108,11 +108,6 @@ export interface SignedUploadUrlOptions extends SignedUrlOptions {
    * Content type for the upload
    */
   contentType: string;
-
-  /**
-   * Maximum file size in bytes
-   */
-  maxSize?: number;
 }
 
 export interface TransformOptions {
