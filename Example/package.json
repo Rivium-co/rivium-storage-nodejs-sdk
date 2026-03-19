@@ -1,0 +1,17 @@
+{
+  "name": "rivium-storage-node-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/main.ts",
+    "start:client": "ts-node src/main.ts --client",
+    "start:server": "ts-node src/main.ts --server"
+  },
+  "dependencies": {
+    "@rivium/storage-node": "file:../"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.0",
+    "typescript": "~5.3.0"
+  }
+}

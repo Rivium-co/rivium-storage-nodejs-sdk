@@ -1,0 +1,43 @@
+{
+  "name": "@rivium/storage-node",
+  "version": "0.1.0",
+  "description": "RiviumStorage Node.js SDK - File storage and image transformation service",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "rivium-storage",
+    "rivium",
+    "storage",
+    "file-upload",
+    "image-transformation",
+    "cdn"
+  ],
+  "author": "Rivium",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rivium-co/rivium-storage-node-sdk"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/node-fetch": "^2.6.11",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "peerDependencies": {}
+}

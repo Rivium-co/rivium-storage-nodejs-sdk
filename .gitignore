@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+._*
+
+# Claude Code
+.claude/
+.claude
+**/.claude/
+**/.claude
+
+# Cloud config (private)
+.cloud
+**/.cloud
+
+# Logs
+*.log
+npm-debug.log*
+
+# Example artifacts
+Example/node_modules/
+Example/package-lock.json
