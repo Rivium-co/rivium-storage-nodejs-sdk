@@ -1,6 +1,6 @@
 {
   "name": "@rivium/storage-node",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "RiviumStorage Node.js SDK - File storage and image transformation service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npx tsc",
     "prepublishOnly": "npm run build",
-    "test": "jest",
+    "test": "npm run build && node --test test/*.test.cjs",
     "lint": "eslint src --ext .ts"
   },
   "keywords": [

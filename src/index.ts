@@ -14,12 +14,14 @@ import {
   PolicyRule,
   BucketPolicy,
   RiviumStorageError,
+  UserTokenResult,
 } from './types';
 
 export * from './types';
 
 const API_BASE_URL = 'https://storage.rivium.co';
 const DEFAULT_TIMEOUT = 30000;
+const DEFAULT_AUTH_URL = 'https://auth.rivium.co';
 
 export class RiviumStorage {
   private apiKey: string;
@@ -27,6 +29,7 @@ export class RiviumStorage {
   private _userId?: string | null;
   private baseUrl: string;
   private timeout: number;
+  private authUrl: string;
 
   constructor(config: RiviumStorageConfig) {
     if (!config.apiKey) {
@@ -38,6 +41,86 @@ export class RiviumStorage {
     this._userId = config.userId;
     this.baseUrl = API_BASE_URL;
     this.timeout = config.timeout || DEFAULT_TIMEOUT;
+    this.authUrl = (config.authUrl || DEFAULT_AUTH_URL).replace(/\/+$/, '');
+  }
+
+  // ==========================================
+  // Rivium user token
+  // ==========================================
+
+  /**
+   * Mint a Rivium user token so your app can prove who the signed-in user is.
+   *
+   * Bucket rules read the user. A client cannot set that itself - the API key
+   * it ships with is public, so the server would have no reason to believe an
+   * `x-user-id` header. Your backend, which holds the server secret, calls
+   * this and hands the token to the app; the client SDKs take it through their
+   * `tokenProvider` option and send it on every request. The same token works
+   * in every Rivium product, and a Rivium Auth sign-in token is the same kind
+   * of token.
+   *
+   * Never ship the server secret (or this call) inside an app.
+   *
+   * @param userId    Your own id for the signed-in user - whatever your rules expect.
+   * @param expiresIn Lifetime in seconds. Default 1 hour, maximum 24 hours.
+   *
+   * @example
+   * // In your Express backend, behind your own session check:
+   * app.post('/rivium-token', async (req, res) => {
+   *   const { token, expiresAt } = await storage.createUserToken(req.session.userId);
+   *   res.json({ token, expiresAt });
+   * });
+   */
+  async createUserToken(userId: string, expiresIn?: number): Promise<UserTokenResult> {
+    if (!userId) {
+      throw new RiviumStorageError('createUserToken requires a userId', 400, 'INVALID_ARGUMENT');
+    }
+    if (!this.serverSecret) {
+      throw new RiviumStorageError(
+        'createUserToken requires the server secret. Initialize with serverSecret (from an environment variable, on your server only).',
+        403,
+        'SERVER_SECRET_REQUIRED',
+      );
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    try {
+      const response: Response = await fetch(`${this.authUrl}/users/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+          'x-server-secret': this.serverSecret,
+        },
+        body: JSON.stringify(expiresIn === undefined ? { userId } : { userId, expiresIn }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const error = (await response.json().catch(() => ({}))) as { message?: unknown; code?: unknown };
+        const message = Array.isArray(error.message) ? error.message.join(', ') : error.message;
+        throw new RiviumStorageError(
+          typeof message === 'string' && message ? message : `HTTP ${response.status}`,
+          response.status,
+          typeof error.code === 'string' ? error.code : undefined,
+        );
+      }
+
+      return (await response.json()) as UserTokenResult;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof RiviumStorageError) {
+        throw error;
+      }
+      if ((error as Error).name === 'AbortError') {
+        throw new RiviumStorageError('Request timeout', 408, 'TIMEOUT');
+      }
+      throw new RiviumStorageError((error as Error).message);
+    }
   }
 
   /**

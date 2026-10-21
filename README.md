@@ -76,6 +76,51 @@ await admin.applyPolicyTemplate(bucket.id, 'publicRead');
 await admin.deleteMany(['file-id-1', 'file-id-2']);
 ```
 
+## Sign users in (one token for every Rivium product)
+
+One Rivium user token identifies your signed-in user in every Rivium product
+(Storage, Sync, Chat, Push, A/B Testing). Your server mints it with the server
+secret and hands it to your app; the app SDKs (`@rivium/storage-web`,
+`@rivium/storage-react-native`, and the other Rivium SDKs) take it through
+their `tokenProvider` option.
+
+```typescript
+import { RiviumStorage } from '@rivium/storage-node';
+
+const storage = new RiviumStorage({
+  apiKey: process.env.RIVIUM_API_KEY!,
+  serverSecret: process.env.RIVIUM_SERVER_SECRET!, // server only
+});
+
+// Express example, behind your own session check
+app.post('/rivium-token', async (req, res) => {
+  const { token, expiresAt } = await storage.createUserToken(req.session.userId);
+  // optional lifetime in seconds: createUserToken(userId, 900)
+  res.json({ token, expiresAt });
+});
+```
+
+`createUserToken(userId, expiresIn?)` posts to `https://auth.rivium.co/users/token`
+(set `authUrl` to change it) and returns `{ token, userId, expiresIn, expiresAt }`.
+It needs `serverSecret`. Using **Rivium Auth**? Its sign-in token is the same
+token, so your app can pass it as is.
+
+In the app:
+
+```typescript
+const storage = new RiviumStorage({
+  apiKey: 'YOUR_API_KEY',
+  tokenProvider: async () => {
+    const res = await fetch('https://your-server.example/rivium-token', { method: 'POST' });
+    return res.ok ? (await res.json()).token : null;
+  },
+});
+```
+
+Server-side calls made with the server secret skip bucket rules, so this SDK
+doesn't need a user token itself. `userId` here is only a legacy hint sent as
+`x-user-id`; the server can't verify it.
+
 ## Features
 
 - **File Upload & Download** — Upload from Buffer, Uint8Array, or string
@@ -85,6 +130,7 @@ await admin.deleteMany(['file-id-1', 'file-id-2']);
 - **Signed URLs** — Secure time-limited upload and download URLs
 - **Bucket Policies** — Firebase-like access rules with templates (publicRead, private, userFolders, imagesOnly, closed)
 - **Dual Mode** — Client mode (apiKey) and server mode (apiKey + serverSecret)
+- **Rivium user tokens** — `createUserToken()` mints the one token every Rivium product accepts
 - **Policy Enforcement** — User-scoped access control via `userId`
 - **TypeScript First** — Full type definitions included
 

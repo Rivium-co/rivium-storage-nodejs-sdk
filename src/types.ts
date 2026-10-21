@@ -14,6 +14,8 @@ export interface RiviumStorageConfig {
   /**
    * User ID for bucket policy enforcement (e.g., when proxying requests for end users)
    * Sent as x-user-id header. Can also be set/changed later via setUserId().
+   * To identify users in your apps, mint a Rivium user token with
+   * createUserToken() instead: the server can verify it.
    */
   userId?: string;
 
@@ -22,6 +24,27 @@ export interface RiviumStorageConfig {
    * @default 30000
    */
   timeout?: number;
+
+  /**
+   * Base URL of Rivium Auth, used by createUserToken().
+   * @default 'https://auth.rivium.co'
+   */
+  authUrl?: string;
+}
+
+/**
+ * A Rivium user token minted by createUserToken(). The same token works in
+ * every Rivium product (Storage, Sync, Chat, Push, A/B Testing).
+ */
+export interface UserTokenResult {
+  /** The signed token. Hand it to your app; its SDKs send it as x-user-token. */
+  token: string;
+  /** The user the token is for. */
+  userId: string;
+  /** Lifetime in seconds. */
+  expiresIn: number;
+  /** ISO 8601 time at which the token expires. */
+  expiresAt: string;
 }
 
 export interface Bucket {
