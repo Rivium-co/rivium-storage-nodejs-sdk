@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@rivium-storage/node"><img src="https://img.shields.io/npm/v/@rivium-storage/node.svg" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/@rivium/storage-node"><img src="https://img.shields.io/npm/v/@rivium/storage-node.svg" alt="npm" /></a>
   <img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5.0+" />
   <img src="https://img.shields.io/badge/Node.js-16+-339933?logo=node.js&logoColor=white" alt="Node.js 16+" />
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" />
@@ -22,7 +22,7 @@
 ## Installation
 
 ```bash
-npm install @rivium-storage/node
+npm install @rivium/storage-node
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ npm install @rivium-storage/node
 ### Client Mode (apiKey only)
 
 ```typescript
-import { RiviumStorage } from '@rivium-storage/node';
+import { RiviumStorage } from '@rivium/storage-node';
 
 const storage = new RiviumStorage({
   apiKey: 'rv_live_xxx',
@@ -136,7 +136,7 @@ doesn't need a user token itself. `userId` here is only a legacy hint sent as
 
 ## Documentation
 
-For full documentation, visit [rivium.co/docs](https://rivium.co/cloud/rivium-storage/docs/sdks-nodejs).
+For full documentation, visit [rivium.co/docs](https://rivium.co/cloud/rivium-storage/docs/nodejs).
 - [Rivium Cloud](https://rivium.co/cloud)
 - [Rivium Console](https://console.rivium.co)
 

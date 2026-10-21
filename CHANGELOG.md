@@ -3,9 +3,8 @@
 ## 0.2.0
 
 ### Added
-- `createUserToken(userId, expiresIn?)` mints a Rivium user token through `POST https://auth.rivium.co/users/token` with the API key and server secret, returning `{ token, userId, expiresIn, expiresAt }`. Requires `serverSecret`. The token works in every Rivium product.
-- `authUrl` config option (default `https://auth.rivium.co`).
-- Tests (`npm test`, Node's built-in runner, no new dependencies). The old `jest` test script referenced a package that was never installed.
+- `createUserToken(userId, expiresIn?)` mints a Rivium user token for one of your users (requires `serverSecret`). Return it to your app: the same token works in Rivium Storage, Sync, Chat, Push and A/B Testing.
+- `authUrl` config option (defaults to `https://auth.rivium.co`).
 
 ## 0.1.0
 
