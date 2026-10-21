@@ -16,8 +16,10 @@ import {
   RiviumStorageError,
   UserTokenResult,
 } from './types';
+import { SDK_HEADER, SDK_HEADER_VALUE } from './version';
 
 export * from './types';
+export { SDK_NAME, SDK_VERSION } from './version';
 
 const API_BASE_URL = 'https://storage.rivium.co';
 const DEFAULT_TIMEOUT = 30000;
@@ -93,6 +95,7 @@ export class RiviumStorage {
           'Content-Type': 'application/json',
           'x-api-key': this.apiKey,
           'x-server-secret': this.serverSecret,
+          [SDK_HEADER]: SDK_HEADER_VALUE,
         },
         body: JSON.stringify(expiresIn === undefined ? { userId } : { userId, expiresIn }),
         signal: controller.signal,
@@ -164,6 +167,7 @@ export class RiviumStorage {
 
     const headers: Record<string, string> = {
       'x-api-key': this.apiKey,
+      [SDK_HEADER]: SDK_HEADER_VALUE,
     };
 
     if (this.serverSecret) {
@@ -339,6 +343,7 @@ export class RiviumStorage {
   async download(fileId: string): Promise<Buffer> {
     const headers: Record<string, string> = {
       'x-api-key': this.apiKey,
+      [SDK_HEADER]: SDK_HEADER_VALUE,
     };
 
     if (this.serverSecret) {
