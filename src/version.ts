@@ -2,7 +2,7 @@
 export const SDK_NAME = 'node';
 
 /** This SDK's version. Must match package.json; test/sdk-header.test.cjs fails when they drift. */
-export const SDK_VERSION = '0.2.0';
+export const SDK_VERSION = '0.2.1';
 
 /** Header naming the SDK on every Rivium request this SDK makes. */
 export const SDK_HEADER = 'X-Rivium-SDK';

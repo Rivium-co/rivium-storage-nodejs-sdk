@@ -52,15 +52,18 @@ test('authUrl is configurable', async () => {
   assert.equal(calls[0].url, 'http://localhost:3005/users/token');
 });
 
-test('without the server secret it fails before any request', async () => {
-  const storage = new RiviumStorage({ apiKey: CONFIG.apiKey });
-
-  await assert.rejects(storage.createUserToken('user-1'), (e) => {
-    assert.ok(e instanceof RiviumStorageError);
-    assert.equal(e.code, 'SERVER_SECRET_REQUIRED');
-    assert.match(e.message, /serverSecret/);
-    return true;
-  });
+test('without the server secret the SDK cannot be created (it is the server SDK)', () => {
+  assert.throws(
+    () => new RiviumStorage({ apiKey: CONFIG.apiKey }),
+    (e) => {
+      assert.ok(e instanceof RiviumStorageError);
+      assert.equal(e.statusCode, 400);
+      assert.equal(e.code, 'INVALID_ARGUMENT');
+      assert.match(e.message, /runs on your server and needs serverSecret/);
+      assert.match(e.message, /apps use the Web\/RN\/mobile SDKs/);
+      return true;
+    },
+  );
   assert.equal(calls.length, 0);
 });
 

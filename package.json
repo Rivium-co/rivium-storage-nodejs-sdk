@@ -1,11 +1,12 @@
 {
   "name": "@rivium/storage-node",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "RiviumStorage Node.js SDK - File storage and image transformation service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
     "build": "npx tsc",
@@ -28,7 +29,7 @@
     "url": "https://github.com/Rivium-co/rivium-storage-node-sdk"
   },
   "dependencies": {
-    "form-data": "^4.0.0",
+    "form-data": "^4.0.6",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
@@ -38,6 +39,5 @@
   },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "peerDependencies": {}
+  }
 }

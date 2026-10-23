@@ -9,7 +9,7 @@ const { RiviumStorage, SDK_NAME, SDK_VERSION } = require('../dist/index.js');
 
 const fileJson = {
   id: 'f1', bucketId: 'b1', path: 'a.txt', fileName: 'a.txt', mimeType: 'text/plain', size: 5,
-  storageKey: 'k', isDeleted: false, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z',
+  createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z',
 };
 
 test('SDK_NAME is node and SDK_VERSION matches package.json', () => {
@@ -50,5 +50,12 @@ test('bucket, upload, download, signed URL and user token requests send X-Rivium
   for (const request of seen) {
     assert.equal(request.headers['x-rivium-sdk'], `node/${SDK_VERSION}`, `${request.method} ${request.url}`);
     assert.equal(request.headers['x-api-key'], 'rv_live_test');
+    assert.equal(request.headers['x-user-id'], undefined, 'the legacy x-user-id is never sent');
   }
+});
+
+test('the legacy user id is gone: no userId option, setUserId or userId getter', () => {
+  const storage = new RiviumStorage({ apiKey: 'rv_live_test', serverSecret: 'rv_srv_test', userId: 'u1' });
+  assert.equal(typeof storage.setUserId, 'undefined');
+  assert.equal('userId' in storage, false);
 });

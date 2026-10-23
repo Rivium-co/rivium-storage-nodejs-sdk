@@ -1,0 +1,7 @@
+node_modules/
+dist/
+package-lock.json
+# Your keys. Never commit them: copy .env.example to .env.
+.env
+.env.*
+!.env.example

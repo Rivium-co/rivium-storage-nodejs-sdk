@@ -2,16 +2,22 @@
   "name": "rivium-storage-node-example",
   "version": "1.0.0",
   "private": true,
+  "description": "Rivium Storage Node.js SDK example: every SDK feature, a self-test, and the small demo server the app examples call",
   "scripts": {
-    "start": "ts-node src/main.ts",
-    "start:client": "ts-node src/main.ts --client",
-    "start:server": "ts-node src/main.ts --server"
+    "build": "tsc",
+    "start": "npm run build && node dist/run.js",
+    "check": "npm run build && node dist/run.js --check",
+    "server": "npm run build && node dist/server.js",
+    "setup-buckets": "npm run build && node dist/run.js --setup-only"
   },
   "dependencies": {
     "@rivium/storage-node": "file:../"
   },
   "devDependencies": {
-    "ts-node": "^10.9.0",
+    "@types/node": "^20.0.0",
     "typescript": "~5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
